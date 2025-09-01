@@ -33,7 +33,7 @@ export async function fetchLatest(prev?: IncuPoint): Promise<IncuPoint> {
   }
 }
 
-// ---- Simulador ----
+// ---- Simuladorrrrrrrrrr ----
 function jitter(x:number, d:number){ return +(x + (Math.random()-0.5)*d).toFixed(1); }
 function clamp(x:number, a:number, b:number){ return Math.min(b, Math.max(a,x)); }
 
