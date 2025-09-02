@@ -114,14 +114,16 @@ export default function ClaraDashboard() {
   return (
     <>
       <header>
-        <img src="/mushroom.svg" alt="logo" className="logo" />
+        <div className="header-content">
+        <img src="/hongos.png" alt="logo" className="logo" />
         <span>Incubadora Mushroom</span>
+        </div>
       </header>
 
       <div className="container">
         {/* Temperatura */}
         <div className="card">
-          <h3>Temperatura</h3>
+          <h3>🌡️ Temperatura</h3>
           <div className="graph">
             <div className="plot">
               {typeof lastTemp !== 'undefined' && (
@@ -172,7 +174,7 @@ export default function ClaraDashboard() {
 
         {/* Humedad */}
         <div className="card">
-          <h3>Humedad</h3>
+          <h3>💧 Humedad</h3>
           <div className="graph">
             <div className="plot">
               {typeof lastHum !== 'undefined' && (
@@ -180,13 +182,19 @@ export default function ClaraDashboard() {
               )}
               {sHum.length ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={sHum}>
+                  <AreaChart data={sHum}>
+                  <defs>
+                    <linearGradient id="humFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
+                    </linearGradient>
+                  </defs>
                     <CartesianGrid stroke="#ffcccc" strokeOpacity={0.12} />
                     <XAxis dataKey="i" hide />
                     <YAxis domain={['dataMin - 1', 'dataMax + 1']} width={0} />
                     <Tooltip formatter={(v: number) => [`${v.toFixed(1)} %`, "Humedad"]} />
-                    <Line type="monotone" dataKey="value" stroke="#ffe1e1" strokeWidth={2} dot={false} isAnimationActive={false} />
-                  </LineChart>
+                    <Area type="monotone" dataKey="value" stroke="#ffffff" strokeWidth={2} fill="url(#humFill)" fillOpacity={1} isAnimationActive={false} />
+                  </AreaChart>
                 </ResponsiveContainer>
               ) : "[Gráfico]"}
             </div>
@@ -217,7 +225,7 @@ export default function ClaraDashboard() {
 
         {/* Luz */}
         <div className="card">
-          <h3>Luz</h3>
+          <h3>💡 Luz</h3>
           <div className="graph">
             <div className="plot">
               <div className="state-chip">
@@ -248,7 +256,7 @@ export default function ClaraDashboard() {
 
         {/* O₂ / CO₂ */}
         <div className="card">
-          <h3>O₂ / CO₂</h3>
+          <h3>🌬️ O₂ / CO₂</h3>
           <div className="graph">
             <div className="plot">
               {typeof lastCO2 !== 'undefined' && (
@@ -256,13 +264,19 @@ export default function ClaraDashboard() {
               )}
               {sCO2.length ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={sCO2}>
+                  <AreaChart data={sCO2}>
+                  <defs>
+                    <linearGradient id="CO2Fill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#ffffff" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
+                    </linearGradient>
+                  </defs>
                     <CartesianGrid stroke="#ffcccc" strokeOpacity={0.12} />
                     <XAxis dataKey="i" hide />
-                    <YAxis domain={['dataMin - 30', 'dataMax + 30']} width={0} />
-                    <Tooltip formatter={(v: number) => [`${Math.round(v)} ppm`, "CO2"]} />
-                    <Line type="monotone" dataKey="value" stroke="#ffd6d6" strokeWidth={2} dot={false} isAnimationActive={false} />
-                  </LineChart>
+                    <YAxis domain={['dataMin - 1', 'dataMax + 1']} width={0} />
+                    <Tooltip formatter={(v: number) => [`${v.toFixed(1)} %`, "CO2"]} />
+                    <Area type="monotone" dataKey="value" stroke="#ffffff" strokeWidth={2} fill="url(#humFill)" fillOpacity={1} isAnimationActive={false} />
+                  </AreaChart>
                 </ResponsiveContainer>
               ) : "[Gráfico]"}
             </div>
