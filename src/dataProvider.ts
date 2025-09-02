@@ -38,9 +38,10 @@ function jitter(x:number, d:number){ return +(x + (Math.random()-0.5)*d).toFixed
 function clamp(x:number, a:number, b:number){ return Math.min(b, Math.max(a,x)); }
 
 export function simulateStep(prev?:IncuPoint):IncuPoint {
-  const t = jitter(prev?.temperature_c ?? 24, 0.4);
-  const h = jitter(prev?.humidity_pct ?? 65, 0.8);
-  const c = Math.round(clamp((prev?.co2_ppm ?? 800) + (Math.random()-0.5)*20, 400, 2000));
+  // smaller drift so lines look stable, with slight noise
+  const t = jitter(prev?.temperature_c ?? 24, 0.15);
+  const h = jitter(prev?.humidity_pct ?? 65, 0.25);
+  const c = Math.round(clamp((prev?.co2_ppm ?? 800) + (Math.random()-0.5)*6, 400, 2000));
   // Luz: cambia cada tanto
   const prevLight = prev?.light_on ?? true;
   const light = Math.random() < 0.1 ? !prevLight : prevLight;

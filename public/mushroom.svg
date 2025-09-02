@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <g stroke="#111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cap -->
+    <path d="M30 110c0-44 40-80 90-80s90 36 90 80c0 0-20-6-90-6s-90 6-90 6z" fill="#E53935"/>
+    <!-- Spots -->
+    <path d="M78 66c-14 0-26 12-26 26 0 8 4 9 12 3 8-6 18-11 26-12 8-1 6-17-12-17z" fill="#fff" stroke="none"/>
+    <path d="M164 60c-12 0-18 9-12 14 6 5 16 9 22 16 6 5 14 6 18-2 0-15-16-28-28-28z" fill="#fff" stroke="none"/>
+    <path d="M118 94c-10 0-18 8-18 18 0 7 6 6 16 6 10 0 22-2 22-10 0-8-10-14-20-14z" fill="#fff" stroke="none"/>
+    <!-- Gills line -->
+    <path d="M60 110c8 10 40 18 60 18s52-8 60-18" stroke="#111"/>
+    <!-- Stipe -->
+    <path d="M92 128c-10 22-10 70 28 70s38-48 28-70" fill="#fff"/>
+  </g>
+</svg>
