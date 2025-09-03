@@ -1,4 +1,3 @@
-
 export type IncuPoint = {
   device_id: string;
   ts: string;               
@@ -8,8 +7,8 @@ export type IncuPoint = {
   light_on?: boolean | null;
 };
 
-
 const API = import.meta.env.VITE_API_BASE as string | undefined;
+
 
 export async function fetchSeries(limit=100): Promise<IncuPoint[]> {
   if (!API) return simulateSeries(limit);

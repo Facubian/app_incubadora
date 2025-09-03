@@ -1,92 +1,11 @@
 import "../styles/clara.css";
 import { useMemo } from "react";
 import { useLiveData } from "../useLiveData";
-import type { IncuPoint } from "../dataProvider";
-import { ResponsiveContainer, AreaChart, Area, LineChart, Line, YAxis, XAxis, Tooltip, CartesianGrid } from "recharts";
-
-// helpers
-type NumericKey = "temperature_c" | "humidity_pct" | "co2_ppm";
-
-function seriesOf(arr: IncuPoint[], key: NumericKey) {
-  return arr
-    .map((d, i) => {
-      const v = d[key];
-      if (v === null || v === undefined) return null;
-      return { i, value: Number(v) };
-    })
-    .filter((p): p is { i: number; value: number } => p !== null);
-}
-
-function minMax(nums: number[]) {
-  if (nums.length === 0) return { min: "-", max: "-" } as const;
-  return { min: Math.min(...nums), max: Math.max(...nums) } as const;
-}
-
-function findExtrema(arr: IncuPoint[], key: NumericKey) {
-  let minVal = Infinity, maxVal = -Infinity;
-  let minTs: string | null = null, maxTs: string | null = null;
-  for (const d of arr) {
-    const v = d[key];
-    if (v === null || v === undefined) continue;
-    const n = Number(v);
-    if (Number.isFinite(n)) {
-      if (n < minVal) { minVal = n; minTs = d.ts; }
-      if (n > maxVal) { maxVal = n; maxTs = d.ts; }
-    }
-  }
-  return {
-    min: Number.isFinite(minVal) ? minVal : "-",
-    minTs,
-    max: Number.isFinite(maxVal) ? maxVal : "-",
-    maxTs,
-  } as { min: number | string; minTs: string | null; max: number | string; maxTs: string | null };
-}
-
-function fmtTs(ts: string) {
-  try {
-    const d = new Date(ts);
-    return d.toLocaleString(undefined, {
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit'
-    });
-  } catch {
-    return ts;
-  }
-}
-
-function fmtDate(ts?: string | null) {
-  if (!ts) return "";
-  try { return new Date(ts).toLocaleDateString(undefined, { year:'numeric', month:'2-digit', day:'2-digit' }); }
-  catch { return ts; }
-}
-
-function fmtTime(ts?: string | null) {
-  if (!ts) return "";
-  try { return new Date(ts).toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' }); }
-  catch { return ts; }
-}
-
-function analyzeLight(arr: IncuPoint[]) {
-  let prev: boolean | null | undefined = undefined;
-  let currentStart: string | null = null;
-  const intervals: { start: string; end: string }[] = [];
-  for (const d of arr) {
-    const on = d.light_on ?? null;
-    if (prev !== true && on === true) currentStart = d.ts;
-    if (prev === true && on !== true && currentStart) {
-      intervals.push({ start: currentStart, end: d.ts });
-      currentStart = null;
-    }
-    prev = on;
-  }
-  const now = new Date().toISOString();
-  const ongoing = prev === true && currentStart !== null;
-  if (ongoing && currentStart) intervals.push({ start: currentStart, end: now });
-  const lastInterval = intervals.at(-1) || null;
-  const lastOnStart = lastInterval?.start ?? null;
-  const durationMs = lastInterval ? (new Date(lastInterval.end).getTime() - new Date(lastInterval.start).getTime()) : null;
-  return { lastOnStart, durationMs, ongoing } as { lastOnStart: string | null; durationMs: number | null; ongoing: boolean };
-}
+import { ResponsiveContainer, AreaChart, Area, YAxis, XAxis, Tooltip, CartesianGrid } from "recharts";
+import { seriesOf, minMax } from "../utils/series";
+import { findExtrema } from "../utils/extrema";
+import { analyzeLight } from "../utils/light";
+import { fmt, fmtDate, fmtTime, formatDuration } from "../utils/format";
 
 export default function ClaraDashboard() {
   // 2000 ms y 100 puntos
@@ -307,17 +226,4 @@ export default function ClaraDashboard() {
       </div>
     </>
   );
-}
-
-function fmt(v: number | string) {
-  return typeof v === "number" ? (Number.isFinite(v) ? v.toFixed(1) : "-") : v;
-}
-
-function formatDuration(ms: number) {
-  const totalSec = Math.max(0, Math.floor(ms / 1000));
-  const h = Math.floor(totalSec / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const s = totalSec % 60;
-  if (h > 0) return `${h} h ${m} min ${s} s`;
-  return `${m} min ${s} s`;
 }
