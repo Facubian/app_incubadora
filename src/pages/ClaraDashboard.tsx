@@ -9,7 +9,7 @@ import { fmt, fmtDate, fmtTime, formatDuration } from "../utils/format";
 
 export default function ClaraDashboard() {
   // 2000 ms y 100 puntos
-  const { data } = useLiveData(2000, 100);
+  const { data } = useLiveData(5000, 100);
   const last = data.at(-1);
 
   // series

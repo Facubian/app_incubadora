@@ -22,7 +22,7 @@ export function useLiveData(intervalMs=2000, cap=100){
         const latest = await fetchLatest(data.at(-1));
         setData(prev => {
           const next = [...prev, latest];
-          if (next.length > cap) next.shift();  // ventana de 100
+          if (next.length > cap) next.shift(); 
           return next;
         });
         setApiOk(true);
